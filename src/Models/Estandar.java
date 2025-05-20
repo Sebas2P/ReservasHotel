@@ -1,37 +1,14 @@
 package Models;
 
-public class Estandar extends Habitacion{
+public class Estandar extends Habitacion {
 
-    private int numCamas; // maximo 2 camas
-    private int capacidad; // maximo 2-3 personas
     private boolean tv; // tiene o no tele una tele
     private boolean desayuno; // tiene o no desayuno
 
-    public Estandar(String codigo, int piso, double precio, boolean disponible, boolean aireAcondicionado, boolean wifi, int numCamas, int capacidad, boolean tv, boolean desayuno) {
-        super(codigo, piso, precio, disponible, aireAcondicionado, wifi);
-        this.numCamas = numCamas;
-        this.capacidad = capacidad;
+    public Estandar(String codigo, int piso, double precio, boolean aireAcondicionado, boolean wifi, int numCamas, int capacidad, boolean tv, boolean desayuno) {
+        super(codigo, piso, precio, aireAcondicionado, wifi, "Estandar"); // Pass "Estandar" as tipo
         this.tv = tv;
         this.desayuno = desayuno;
-    }
-
-    public Estandar() {
-    }
-
-    public int getNumCamas() {
-        return numCamas;
-    }
-
-    public void setNumCamas(int numCamas) {
-        this.numCamas = numCamas;
-    }
-
-    public int getCapacidad() {
-        return capacidad;
-    }
-
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
     }
 
     public boolean isTv() {
@@ -52,21 +29,13 @@ public class Estandar extends Habitacion{
 
     @Override
     public double calcularPrecio(int dias) {
-        double precioFinal = getPrecio() * dias; // Precio base por los días de estancia
-
-        if (isAireAcondicionado()) {
-            precioFinal += 20 * dias; // Costo adicional por aire acondicionado
-        }
-        if (isWifi()) {
-            precioFinal += 10 * dias; // Costo adicional por wifi
-        }
+        double precioFinal = super.calcularPrecio(dias); // Base price
         if (this.tv) {
-            precioFinal += 15 * dias; // Costo adicional por TV
+            precioFinal += 15 * dias; // Additional cost for TV
         }
         if (this.desayuno) {
-            precioFinal += 10 * dias; // Costo adicional por desayuno
+            precioFinal += 10 * dias; // Additional cost for breakfast
         }
         return precioFinal;
     }
-
 }

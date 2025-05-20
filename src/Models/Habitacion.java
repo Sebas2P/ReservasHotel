@@ -1,24 +1,23 @@
 package Models;
 
-public class Habitacion{
+import java.time.LocalDate;
+import java.util.List;
+
+public class Habitacion {
     private String codigo;
     private int piso;
     private double precio;
-    private boolean disponible;
     private boolean aireAcondicionado;
     private boolean wifi;
-    private boolean bañoPrivado;
+    private String tipo; // "Estandar" or "Vip"
 
-    public Habitacion(String codigo, int piso, double precio, boolean disponible, boolean aireAcondicionado, boolean wifi) {
+    public Habitacion(String codigo, int piso, double precio, boolean aireAcondicionado, boolean wifi, String tipo) {
         this.codigo = codigo;
         this.piso = piso;
         this.precio = precio;
-        this.disponible = disponible;
         this.aireAcondicionado = aireAcondicionado;
         this.wifi = wifi;
-    }
-
-    public Habitacion() {
+        this.tipo = tipo;
     }
 
     public String getCodigo() {
@@ -45,14 +44,6 @@ public class Habitacion{
         this.precio = precio;
     }
 
-    public boolean isDisponible() {
-        return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
-    }
-
     public boolean isAireAcondicionado() {
         return aireAcondicionado;
     }
@@ -69,11 +60,24 @@ public class Habitacion{
         this.wifi = wifi;
     }
 
-    public double calcularPrecio(int dias) {
-        double precioFinal = getPrecio() * dias; // Precio base por los días de estancia
-        return precioFinal;
+    public String getTipo() {
+        return tipo;
     }
 
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
+    public boolean esDisponible(LocalDate fechaInicio, LocalDate fechaFin, List<Reserva> reservasExistentes) {
+        for (Reserva reserva : reservasExistentes) {
+            if (reserva.getHabitacion().equals(this) && reserva.seSolapan(fechaInicio, fechaFin)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public double calcularPrecio(int dias) {
+        return precio * dias;
+    }
 }
