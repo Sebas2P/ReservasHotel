@@ -17,6 +17,9 @@ public class Interfaz extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Mostrar ventana inicial para crear habitaciones
+        mostrarVentanaCrearHabitaciones();
+
         // Tabbed Pane
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -29,6 +32,137 @@ public class Interfaz extends JFrame {
         tabbedPane.addTab("Reserva VIP", panelVip);
 
         add(tabbedPane, BorderLayout.CENTER);
+    }
+
+    private void mostrarVentanaCrearHabitaciones() {
+        JDialog dialogo = new JDialog(this, "Crear Habitaciones", true);
+        dialogo.setSize(500, 400);
+        dialogo.setLayout(new BorderLayout());
+
+        JPanel panelFormulario = new JPanel();
+        panelFormulario.setLayout(new GridLayout(0, 2));
+
+        JLabel lblTipo = new JLabel("Tipo de Habitación:");
+        JComboBox<String> comboTipo = new JComboBox<>(new String[]{"Estandar", "VIP"});
+        JLabel lblCodigo = new JLabel("Código:");
+        JTextField txtCodigo = new JTextField();
+        JLabel lblPiso = new JLabel("Piso:");
+        JTextField txtPiso = new JTextField();
+        JLabel lblPrecio = new JLabel("Precio Base:");
+        JTextField txtPrecio = new JTextField();
+
+        // Servicios básicos
+        JCheckBox cbTV = new JCheckBox("TV");
+        JCheckBox cbDesayuno = new JCheckBox("Desayuno");
+        JCheckBox cbAireAcondicionado = new JCheckBox("Aire Acondicionado");
+        JCheckBox cbWifi = new JCheckBox("WiFi");
+
+        // Servicios adicionales para VIP
+        JCheckBox cbJacuzzi = new JCheckBox("Jacuzzi");
+        JCheckBox cbMinibar = new JCheckBox("Minibar");
+        JCheckBox cbServicioHabitacion = new JCheckBox("Servicio a la Habitación");
+        JCheckBox cbStreamingPremium = new JCheckBox("Streaming Premium");
+
+        panelFormulario.add(lblTipo);
+        panelFormulario.add(comboTipo);
+        panelFormulario.add(lblCodigo);
+        panelFormulario.add(txtCodigo);
+        panelFormulario.add(lblPiso);
+        panelFormulario.add(txtPiso);
+        panelFormulario.add(lblPrecio);
+        panelFormulario.add(txtPrecio);
+        panelFormulario.add(cbTV);
+        panelFormulario.add(cbDesayuno);
+        panelFormulario.add(cbAireAcondicionado);
+        panelFormulario.add(cbWifi);
+        panelFormulario.add(cbJacuzzi);
+        panelFormulario.add(cbMinibar);
+        panelFormulario.add(cbServicioHabitacion);
+        panelFormulario.add(cbStreamingPremium);
+
+        // Mostrar/ocultar servicios adicionales según el tipo de habitación
+        comboTipo.addActionListener(e -> {
+            boolean esVIP = comboTipo.getSelectedItem().equals("VIP");
+            cbJacuzzi.setVisible(esVIP);
+            cbMinibar.setVisible(esVIP);
+            cbServicioHabitacion.setVisible(esVIP);
+            cbStreamingPremium.setVisible(esVIP);
+        });
+
+        // Botón para agregar habitación
+        JButton btnAgregarHabitacion = new JButton("Agregar Habitación");
+        btnAgregarHabitacion.addActionListener(e -> {
+            String tipo = (String) comboTipo.getSelectedItem();
+            String codigo = txtCodigo.getText().trim();
+            String pisoStr = txtPiso.getText().trim();
+            String precioStr = txtPrecio.getText().trim();
+
+            if (codigo.isEmpty() || pisoStr.isEmpty() || precioStr.isEmpty()) {
+                JOptionPane.showMessageDialog(dialogo, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int piso;
+            double precio;
+            try {
+                piso = Integer.parseInt(pisoStr);
+                precio = Double.parseDouble(precioStr);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogo, "Piso y precio deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar código único
+            for (Habitacion habitacion : hotel.getListaHabitaciones()) {
+                if (habitacion.getCodigo().equals(codigo)) {
+                    JOptionPane.showMessageDialog(dialogo, "El código de habitación ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Crear habitación
+            Habitacion habitacion;
+            if (tipo.equals("Estandar")) {
+                habitacion = new Estandar(codigo, piso, precio, cbAireAcondicionado.isSelected(), cbWifi.isSelected(), 2, 2, cbTV.isSelected(), cbDesayuno.isSelected());
+            } else {
+                habitacion = new Vip(codigo, piso, precio, cbAireAcondicionado.isSelected(), cbWifi.isSelected(), "Matrimonial", 30.0, 1, 1, cbStreamingPremium.isSelected(), cbJacuzzi.isSelected(), cbServicioHabitacion.isSelected());
+            }
+
+            hotel.getListaHabitaciones().add(habitacion);
+            JOptionPane.showMessageDialog(dialogo, "Habitación agregada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            // Limpiar campos
+            txtCodigo.setText("");
+            txtPiso.setText("");
+            txtPrecio.setText("");
+            cbTV.setSelected(false);
+            cbDesayuno.setSelected(false);
+            cbAireAcondicionado.setSelected(false);
+            cbWifi.setSelected(false);
+            cbJacuzzi.setSelected(false);
+            cbMinibar.setSelected(false);
+            cbServicioHabitacion.setSelected(false);
+            cbStreamingPremium.setSelected(false);
+        });
+
+        // Botón para finalizar
+        JButton btnFinalizar = new JButton("Finalizar");
+        btnFinalizar.addActionListener(e -> {
+            if (hotel.getListaHabitaciones().isEmpty()) {
+                JOptionPane.showMessageDialog(dialogo, "Debe agregar al menos una habitación antes de continuar.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                dialogo.dispose();
+            }
+        });
+
+        JPanel panelBotones = new JPanel();
+        panelBotones.add(btnAgregarHabitacion);
+        panelBotones.add(btnFinalizar);
+
+        dialogo.add(panelFormulario, BorderLayout.CENTER);
+        dialogo.add(panelBotones, BorderLayout.SOUTH);
+
+        dialogo.setVisible(true);
     }
 
     private JPanel crearPanelReserva(String tipoHabitacion) {
