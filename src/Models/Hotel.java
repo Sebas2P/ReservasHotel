@@ -17,7 +17,7 @@ public class Hotel {
         this.telefono = telefono;
     }
 
-    public Hotel(){
+    public Hotel() {
     }
 
     public String getNombre() {
@@ -47,19 +47,26 @@ public class Hotel {
     public Reserva crearReserva(String fechaInicio, String fechaFin, String tipoHabitacion, Huesped huesped, int numPersonas) {
         LocalDate inicio = LocalDate.parse(fechaInicio);
         LocalDate fin = LocalDate.parse(fechaFin);
+
+        System.out.println("Buscando habitaciones disponibles del tipo: " + tipoHabitacion);
         for (Habitacion habitacion : listaHabitaciones) {
+            System.out.println("Verificando habitación: " + habitacion.getCodigo() + " de tipo: " + habitacion.getTipo());
             if (habitacion.getTipo().equals(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
+                System.out.println("Habitación disponible encontrada: " + habitacion.getCodigo());
                 Reserva reserva = new Reserva(fechaInicio, fechaFin, "12:00", huesped, numPersonas, habitacion);
                 listaReservas.add(reserva);
+                System.out.println("Reserva creada con éxito para la habitación: " + habitacion.getCodigo());
                 return reserva;
             }
         }
+        System.out.println("No se encontraron habitaciones disponibles del tipo: " + tipoHabitacion);
         return null; // No hay habitaciones disponibles
     }
 
     public boolean consultarDisponibilidad(String fechaInicio, String fechaFin, String tipoHabitacion) {
         LocalDate inicio = LocalDate.parse(fechaInicio);
         LocalDate fin = LocalDate.parse(fechaFin);
+
         for (Habitacion habitacion : listaHabitaciones) {
             if (habitacion.getTipo().equals(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
                 return true;

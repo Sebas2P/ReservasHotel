@@ -71,9 +71,11 @@ public class Habitacion {
     public boolean esDisponible(LocalDate fechaInicio, LocalDate fechaFin, List<Reserva> reservasExistentes) {
         for (Reserva reserva : reservasExistentes) {
             if (reserva.getHabitacion().equals(this) && reserva.seSolapan(fechaInicio, fechaFin)) {
+                System.out.println("Habitación " + codigo + " no disponible en el rango de fechas: " + fechaInicio + " - " + fechaFin);
                 return false;
             }
         }
+        System.out.println("Habitación " + codigo + " disponible en el rango de fechas: " + fechaInicio + " - " + fechaFin);
         return true;
     }
 

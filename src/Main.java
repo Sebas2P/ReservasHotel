@@ -16,78 +16,23 @@ public class Main {
         System.out.println("Ingrese el tipo de habitación a reservar (Estandar/VIP): ");
         String tipoHabitacion = scanner.nextLine();
 
-        Habitacion habitacion = null;
-        if (tipoHabitacion.equalsIgnoreCase("Estandar")) {
-            System.out.println("Ingrese el código de la habitación: ");
-            String codigo = scanner.nextLine();
-            System.out.println("Ingrese el piso: ");
-            int piso = scanner.nextInt();
-            System.out.println("Ingrese el precio: ");
-            double precio = scanner.nextDouble();
-            scanner.nextLine(); // Consume newline
-            System.out.println("¿Tiene aire acondicionado? (si/no): ");
-            boolean aireAcondicionado = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Tiene wifi? (si/no): ");
-            boolean wifi = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Tiene TV? (si/no): ");
-            boolean tv = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Incluye desayuno? (si/no): ");
-            boolean desayuno = convertirBoolean(scanner.nextLine());
-
-            habitacion = new Estandar(codigo, piso, precio, aireAcondicionado, wifi, 2, 2, tv, desayuno);
-        } else if (tipoHabitacion.equalsIgnoreCase("VIP")) {
-            System.out.println("Ingrese el código de la habitación: ");
-            String codigo = scanner.nextLine();
-            System.out.println("Ingrese el piso: ");
-            int piso = scanner.nextInt();
-            System.out.println("Ingrese el precio: ");
-            double precio = scanner.nextDouble();
-            scanner.nextLine(); // Consume newline
-            System.out.println("¿Tiene aire acondicionado? (si/no): ");
-            boolean aireAcondicionado = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Tiene wifi? (si/no): ");
-            boolean wifi = convertirBoolean(scanner.nextLine());
-
-            // Selección del tipo de camas
-            String tipoCamas = "";
-            while (true) {
-                System.out.println("Seleccione el tipo de camas (ingrese el número): ");
-                System.out.println("1. matrimonial");
-                System.out.println("2. litera");
-                System.out.println("3. simple");
-                System.out.println("4. de agua");
-                int opcion = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-                switch (opcion) {
-                    case 1 -> tipoCamas = "matrimonial";
-                    case 2 -> tipoCamas = "litera";
-                    case 3 -> tipoCamas = "simple";
-                    case 4 -> tipoCamas = "de agua";
-                    default -> {
-                        System.out.println("Opción no válida. Intente de nuevo.");
-                        continue;
-                    }
-                }
-                break;
-            }
-
-            System.out.println("¿Tiene TV con streaming premium? (si/no): ");
-            boolean tvStreamingPremium = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Tiene jacuzzi? (si/no): ");
-            boolean jacuzzi = convertirBoolean(scanner.nextLine());
-            System.out.println("¿Incluye servicio a la habitación? (si/no): ");
-            boolean servicioHabitacion = convertirBoolean(scanner.nextLine());
-
-            habitacion = new Vip(codigo, piso, precio, aireAcondicionado, wifi, tipoCamas, 0, 0, 0, tvStreamingPremium, jacuzzi, servicioHabitacion);
-        } else {
-            System.out.println("Tipo de habitación no válido.");
+        if (hotel.getListaHabitaciones().isEmpty()) {
+            System.out.println("No hay habitaciones creadas en el hotel. Por favor, cree habitaciones antes de continuar.");
             return;
         }
 
-        // Agregar habitación al hotel
-        List<Habitacion> habitaciones = new ArrayList<>();
-        habitaciones.add(habitacion);
-        hotel.setListaHabitaciones(habitaciones);
+        Habitacion habitacion = null;
+        for (Habitacion h : hotel.getListaHabitaciones()) {
+            if (h.getTipo().equalsIgnoreCase(tipoHabitacion)) {
+                habitacion = h;
+                break;
+            }
+        }
+
+        if (habitacion == null) {
+            System.out.println("No hay habitaciones disponibles del tipo solicitado: " + tipoHabitacion);
+            return;
+        }
 
         // Crear huésped
         System.out.println("Ingrese la cédula del huésped: ");
@@ -125,9 +70,5 @@ public class Main {
         } else {
             System.out.println("No hay habitaciones disponibles.");
         }
-    }
-
-    private static boolean convertirBoolean(String respuesta) {
-        return respuesta.equalsIgnoreCase("si");
     }
 }
