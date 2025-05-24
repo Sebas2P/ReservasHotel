@@ -65,17 +65,6 @@ public class Hotel {
         return null; // No hay habitaciones disponibles
     }
 
-    public boolean consultarDisponibilidad(String fechaInicio, String fechaFin, String tipoHabitacion) {
-        LocalDate inicio = LocalDate.parse(fechaInicio);
-        LocalDate fin = LocalDate.parse(fechaFin);
-
-        for (Habitacion habitacion : listaHabitaciones) {
-            if (habitacion.getTipo().equalsIgnoreCase(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
-                return true; // Hay al menos una habitación disponible
-            }
-        }
-        return false; // No hay habitaciones disponibles
-    }
 
     public List<Habitacion> getListaHabitaciones() {
         return listaHabitaciones;
