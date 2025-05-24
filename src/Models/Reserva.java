@@ -2,6 +2,8 @@ package Models;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reserva {
     private String fechaInicio;
@@ -92,12 +94,14 @@ public class Reserva {
     public boolean seSolapan(LocalDate inicio, LocalDate fin) {
         LocalDate reservaInicio = LocalDate.parse(fechaInicio);
         LocalDate reservaFin = LocalDate.parse(fechaFin);
+
+        // Verificar si los rangos de fechas se solapan
         return !(fin.isBefore(reservaInicio) || inicio.isAfter(reservaFin));
     }
 
     public static boolean validarFechas(String fechaInicio, String fechaFin) {
         LocalDate inicio = LocalDate.parse(fechaInicio);
         LocalDate fin = LocalDate.parse(fechaFin);
-        return !fin.isBefore(inicio);
+        return !fin.isBefore(inicio); // Permitir fechas donde fin es igual o posterior a inicio
     }
 }

@@ -8,6 +8,7 @@ public class Hotel {
     private String nombre;
     private String direccion;
     private String telefono;
+
     private List<Habitacion> listaHabitaciones = new ArrayList<>();
     private List<Reserva> listaReservas = new ArrayList<>();
 
@@ -51,10 +52,11 @@ public class Hotel {
         System.out.println("Buscando habitaciones disponibles del tipo: " + tipoHabitacion);
         for (Habitacion habitacion : listaHabitaciones) {
             System.out.println("Verificando habitación: " + habitacion.getCodigo() + " de tipo: " + habitacion.getTipo());
-            if (habitacion.getTipo().equals(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
+            if (habitacion.getTipo().equalsIgnoreCase(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
                 System.out.println("Habitación disponible encontrada: " + habitacion.getCodigo());
                 Reserva reserva = new Reserva(fechaInicio, fechaFin, "12:00", huesped, numPersonas, habitacion);
                 listaReservas.add(reserva);
+                Habitacion.registrarReserva(reserva); // Registrar la reserva en Disponibilidad
                 System.out.println("Reserva creada con éxito para la habitación: " + habitacion.getCodigo());
                 return reserva;
             }
@@ -68,11 +70,11 @@ public class Hotel {
         LocalDate fin = LocalDate.parse(fechaFin);
 
         for (Habitacion habitacion : listaHabitaciones) {
-            if (habitacion.getTipo().equals(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
-                return true;
+            if (habitacion.getTipo().equalsIgnoreCase(tipoHabitacion) && habitacion.esDisponible(inicio, fin, listaReservas)) {
+                return true; // Hay al menos una habitación disponible
             }
         }
-        return false;
+        return false; // No hay habitaciones disponibles
     }
 
     public List<Habitacion> getListaHabitaciones() {

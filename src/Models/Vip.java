@@ -21,6 +21,62 @@ public class Vip extends Habitacion {
         this.serviciohabitacion = serviciohabitacion;
     }
 
+    public String getTipoCamas() {
+        return tipoCamas;
+    }
+
+    public void setTipoCamas(String tipoCamas) {
+        this.tipoCamas = tipoCamas;
+    }
+
+    public double getMetrosCuadrados() {
+        return metrosCuadrados;
+    }
+
+    public void setMetrosCuadrados(double metrosCuadrados) {
+        this.metrosCuadrados = metrosCuadrados;
+    }
+
+    public int getNumCuartos() {
+        return numCuartos;
+    }
+
+    public void setNumCuartos(int numCuartos) {
+        this.numCuartos = numCuartos;
+    }
+
+    public int getNumTvs() {
+        return numTvs;
+    }
+
+    public void setNumTvs(int numTvs) {
+        this.numTvs = numTvs;
+    }
+
+    public boolean isTvStreamingPremium() {
+        return TvStreamingPremium;
+    }
+
+    public void setTvStreamingPremium(boolean tvStreamingPremium) {
+        TvStreamingPremium = tvStreamingPremium;
+    }
+
+    public boolean isJacuzzi() {
+        return jacuzzi;
+    }
+
+    public void setJacuzzi(boolean jacuzzi) {
+        this.jacuzzi = jacuzzi;
+    }
+
+    public boolean isServiciohabitacion() {
+        return serviciohabitacion;
+    }
+
+    public void setServiciohabitacion(boolean serviciohabitacion) {
+        this.serviciohabitacion = serviciohabitacion;
+    }
+
     @Override
     public double calcularPrecio(int dias) {
         double precioFinal = super.calcularPrecio(dias); // Base price
